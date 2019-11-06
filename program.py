@@ -5,15 +5,19 @@ class Node:
     self.ascendant = ascendants
 def build_tree(a_descendant, a_ascendant):
     #add here
+    print('is this where?')
     a_descendant.ascendant.append(Node(a_ascendant.role,a_descendant))
     return a_descendant
 def traverse_down(start,role):
-    if start.ascendant == None:
-        return None
+    if start.ascendant == []:
+        return
     elif start.role == role:
         return start
     else:
         for i in start.ascendant:
+            print(start.role)
+            print(i.role)
+            print(i.ascendant[0].role)
             traverse_down(i,role)
     #to be implemented
 def main():
@@ -34,14 +38,16 @@ def main():
     while needToCheck != []:
         for line in needToCheck:
             if count != 0:
-                if root.role == line[0]:
+                if root.role == line[1]:
                     root = build_tree(Node(line[1]),root)
                     needToCheck.remove(line)
                 else:
+                    print(root.role)
                     inTree = traverse_down(root,line[1])
                     if inTree != None:
                         build_tree(inTree,Node(line[0]))
                         needToCheck.remove(line)
+                    inTree = None
             else:                    
                 root = Node(line[1])
                 root.ascendant.append(Node(line[0],root))
