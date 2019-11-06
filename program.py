@@ -16,8 +16,8 @@ def main():
             f = open('roleHierarchy.txt')
             break
         except:
-            print('oops, please have a valid roleHierarchy.txt file in the directory, then press enter')
-            input()
+            print('oops, please have a valid roleHierarchy.txt file in the directory')
+            input('Press enter to try again')
     fline = f.readlines()
     root = Node()
     needToCheck = []
