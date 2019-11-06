@@ -10,14 +10,14 @@ def build_tree(a_descendant, a_ascendant):
     return a_descendant
 def traverse_down(start,role):
     if start.ascendant == []:
-        return
+        return (None,False)
     elif start.role == role:
-        return start
+        return (start,True)
     else:
         for i in start.ascendant:
-            print(start.role)
-            print(i.role)
-            print(i.ascendant[0].role)
+            # print(start.role)
+            # print(i.role)
+            # print(i.ascendant[0].role)
             traverse_down(i,role)
     #to be implemented
 def main():
@@ -43,11 +43,14 @@ def main():
                     needToCheck.remove(line)
                 else:
                     print(root.role)
-                    inTree = traverse_down(root,line[1])
-                    if inTree != None:
-                        build_tree(inTree,Node(line[0]))
+                    (node,inTree) = traverse_down(root,line[1])
+                    if inTree:
+                        build_tree(node,Node(line[0]))
+                        print('before need to check')
+                        print_array(needToCheck)
                         needToCheck.remove(line)
-                    inTree = None
+                        print('after need to check')
+                        print_array(needToCheck)
             else:                    
                 root = Node(line[1])
                 root.ascendant.append(Node(line[0],root))
