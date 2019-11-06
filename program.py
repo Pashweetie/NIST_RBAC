@@ -14,6 +14,9 @@ def traverse_down(start,role):
     elif start.role == role:
         return (start,True)
     else:
+        # print(start.role)
+        # print(role)
+        # print(len(start.ascendant))
         for i in start.ascendant:
             # print(start.role)
             # print(i.role)
@@ -39,6 +42,7 @@ def main():
         for line in needToCheck:
             if count != 0:
                 if root.role == line[1]:
+                    print('')
                     root = build_tree(Node(line[1]),root)
                     needToCheck.remove(line)
                 else:
