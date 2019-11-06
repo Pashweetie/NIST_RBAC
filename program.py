@@ -1,16 +1,14 @@
 class Node:
-  def __init__(self, role = None, descendants=[], ascendant=[]):
+  def __init__(self, role = None, descendant=[], ascendants=[]):
     self.role = role
-    self.descendants = descendants
-    self.ascendant = ascendant
-def build_tree():
-    ayy = 0
-def build_tree_test(root, role):
-    print("before"+root.role)
-    root.ascendant.append(Node(role,root,None))
-    print("after"+root.role)
+    self.descendants = descendant
+    self.ascendant = ascendants
+def build_tree(a_descendant, a_ascendant):
     
-    return root
+    return a_descendant
+def traverse_down(start,role):
+    hi = 0
+    #to be implemented
 def main():
     while True:
         try:
@@ -21,13 +19,32 @@ def main():
             input()
     fline = f.readlines()
     root = Node()
+    needToCheck = []
     for line in fline:
-        a_d_array = line.split()
-        root.role = a_d_array[0]
-        root = build_tree_test(root,a_d_array[1])
+        needToCheck.append(line.split())
+    print_array(needToCheck)
+    while needToCheck != []:
+        for line in needToCheck:
+            inTree = traverse_down(root,line)
+            if inTree != None:
+                root = inTree
+            #traverse down to check if its in the tree
+            #if it is then add it to the tree
+            #otherwise keep in in needToCheck
     print_tree(root)
+def print_array(array):
+    for i in array:
+        print()
+        for b in i:
+            print (b+" ",end='')
 def print_tree(root):
+    print(root.role)
     for nodes in root.ascendant:
+        if nodes != None:
+            print(nodes.role)
+        elif nodes.ascendant != None:
+            print_tree(nodes)
+
         print(nodes.role)
 if __name__ == "__main__":
   main()
