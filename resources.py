@@ -1,12 +1,16 @@
 import sys
 
-def roleObject(roles, res):
+def roleMatrix(roles, res):
   n = len(res)
+  m = len(roles)
   print("-----"*5)
   for role in roles:
-    for i in range(n):
-      sys.stdout.write(f"   {res[i]}")
-      if (i+1) % 5 == 0 or i+1 == n:
+    for i in range(n+m):
+      if i >= m:
+        sys.stdout.write(f"   {res[i-m]}")
+      else:
+        sys.stdout.write(f"   {roles[i]}")
+      if (i+1) % 5 == 0 or i+1 == n+m:
         print(f"\n{role}:")
     print("-----"*5)
 
@@ -25,12 +29,19 @@ def getResources(name):
   f.close()
   return line.split(" ")
 
+def removeEmpty(r):
+  while("" in r):
+    r.remove("")
+  return r
+
 def main():
+  roles = ["R1", "R2", "R3"] #temp
   while True:
     r = getResources("resourceObjects.txt")
+    r = removeEmpty(r)
     (dupe, found) = checkDupes(r)
     if not found:
-      roleObject(["R1", "R2", "R3"],r)
+      roleMatrix(roles,r)
       break
     input(f"Duplicate object is found {dupe}, press ENTER to read it again")
 
