@@ -4,10 +4,11 @@ class Node:
     self.descendants = descendant
     self.ascendant = ascendants
 def build_tree(a_descendant, a_ascendant):
-    
+    #add here
+    a_descendant.ascendant.append(Node(a_ascendant.role,a_descendant))
     return a_descendant
 def traverse_down(start,role):
-    hi = 0
+    hi=0
     #to be implemented
 def main():
     while True:
@@ -23,14 +24,23 @@ def main():
     for line in fline:
         needToCheck.append(line.split())
     print_array(needToCheck)
+    count = 0
     while needToCheck != []:
-        for line in needToCheck:
-            inTree = traverse_down(root,line)
-            if inTree != None:
-                root = inTree
-            #traverse down to check if its in the tree
-            #if it is then add it to the tree
-            #otherwise keep in in needToCheck
+            for line in needToCheck:
+                if count != 0:
+                    if root.role == line[0]:
+                        root = build_tree(Node(line[1]),root)
+                        needToCheck.remove(line)
+                    else:
+                        inTree = traverse_down(root,line[1])
+                        if inTree != None:
+                            build_tree(inTree,Node(line[0]))
+                            needToCheck.remove(line)
+                else:
+                    
+                    root = Node(line[1])
+                    root.ascendant.append(Node(line[0],root))
+                    count =1
     print_tree(root)
 def print_array(array):
     for i in array:
