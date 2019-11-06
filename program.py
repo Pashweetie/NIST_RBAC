@@ -26,21 +26,21 @@ def main():
     print_array(needToCheck)
     count = 0
     while needToCheck != []:
-            for line in needToCheck:
-                if count != 0:
-                    if root.role == line[0]:
-                        root = build_tree(Node(line[1]),root)
-                        needToCheck.remove(line)
-                    else:
-                        inTree = traverse_down(root,line[1])
-                        if inTree != None:
-                            build_tree(inTree,Node(line[0]))
-                            needToCheck.remove(line)
+        for line in needToCheck:
+            if count != 0:
+                if root.role == line[0]:
+                    root = build_tree(Node(line[1]),root)
+                    needToCheck.remove(line)
                 else:
-                    
-                    root = Node(line[1])
-                    root.ascendant.append(Node(line[0],root))
-                    count =1
+                    inTree = traverse_down(root,line[1])
+                    if inTree != None:
+                        build_tree(inTree,Node(line[0]))
+                        needToCheck.remove(line)
+            else:                    
+                root = Node(line[1])
+                root.ascendant.append(Node(line[0],root))
+                count =1
+                print_tree(root)
     print_tree(root)
 def print_array(array):
     for i in array:
@@ -48,13 +48,13 @@ def print_array(array):
         for b in i:
             print (b+" ",end='')
 def print_tree(root):
-    print(root.role)
+    print()
     for nodes in root.ascendant:
+        print(root.role+" ->",end='')
         if nodes != None:
-            print(nodes.role)
+            print(nodes.role, end='')
         elif nodes.ascendant != None:
             print_tree(nodes)
-
-        print(nodes.role)
+        print()
 if __name__ == "__main__":
   main()
