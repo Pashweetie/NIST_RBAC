@@ -1,0 +1,2 @@
+first read in the values from the file
+if something is an ascendant then just point to it from another node
