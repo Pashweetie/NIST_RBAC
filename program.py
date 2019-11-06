@@ -8,7 +8,13 @@ def build_tree(a_descendant, a_ascendant):
     a_descendant.ascendant.append(Node(a_ascendant.role,a_descendant))
     return a_descendant
 def traverse_down(start,role):
-    hi=0
+    if start.ascendant == None:
+        return None
+    elif start.role == role:
+        return start
+    else:
+        for i in start.ascendant:
+            traverse_down(i,role)
     #to be implemented
 def main():
     while True:
