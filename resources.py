@@ -3,15 +3,16 @@ import sys
 def roleMatrix(roles, res):
   n = len(res)
   m = len(roles)
-  print("-----"*5)
+  print("-----"*6)
   for role in roles:
+    sys.stdout.write("   ")
     for i in range(n+m):
       if i >= m:
         sys.stdout.write(f"   {res[i-m]}")
       else:
         sys.stdout.write(f"   {roles[i]}")
       if (i+1) % 5 == 0 or i+1 == n+m:
-        print(f"\n{role}:")
+        sys.stdout.write(f"\n{role}:\n   ")
     print("-----"*5)
 
 def checkDupes(r):
