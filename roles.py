@@ -22,15 +22,10 @@ def getRoles(name):
 
 def findHead(roles):
   for role in roles:
-    if roles.get(roles[role]):
-      # print(f"{roles.get(role)} -> {role} ")
-      pass
-    else:
-      # print(f"HEAD: {roles.get(role)} -> {role} ")
-      helpPrintTree(roles.get(role), roles)
-      return
+    if not roles.get(roles[role]):
+      return roles.get(role)
 
-def helpPrintTree(key, roles):
+def printTree(key, roles):
   plist = []
   for role in roles:
     if roles.get(role) == key:
@@ -40,14 +35,15 @@ def helpPrintTree(key, roles):
     sys.stdout.write(f"{item}, ")
   print()
   for item in plist:
-    helpPrintTree(item, roles)
+    printTree(item, roles)
 
 def main():
   while True:
     (valid, r) = getRoles("roleHierarchy.txt")
     if valid:
       # print(r)
-      findHead(r)
+      head = findHead(r)
+      printTree(head, r)
       break
     input(
       f"Invalid tree, duplicate decendant: {r}, press ENTER to read it again")
