@@ -64,6 +64,14 @@ def main():
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
 
 
+def buildMatrix(roles, res):
+  matrix = dict()
+  for role in roles:
+    inner = dict()
+    for r in res:
+      inner[r] = []
+    matrix[role] = inner
+  return matrix
 
 def roleMatrix(roles, res):
   n = len(res)
@@ -102,7 +110,7 @@ def resources(rroles):
       roles.append(i)
     if rroles.get(i) not in roles:
       roles.append(rroles.get(i))
-      
+
   print(roles)
   while True:
     r = getResources("resourceObjects.txt")
@@ -110,6 +118,7 @@ def resources(rroles):
     (dupe, found) = checkDupes(r)
     if not found:
       roleMatrix(roles,r)
+      print(buildMatrix(roles,r))
       break
     input(f"Duplicate object is found {dupe}, press ENTER to read it again")
 
