@@ -4,7 +4,15 @@ def removeEmpty(r):
     r.remove("")
   return r
 
-
+def getRules():
+  f = open('permissionsToRoles.txt')
+  rules = dict()
+def inherit(matrix, keys, ascendant):
+  descendant = keys[ascendant]
+  
+  if descendant == None:
+    return
+  inherit(keys[ascendant])
 def getRoles(name):
   f = open(name)
   lines = f.readlines()
@@ -13,9 +21,9 @@ def getRoles(name):
   for line in lines:
     vline = removeEmpty(line.strip("\n").split(" "))
     if len(vline) > 2:
-      return (False, {})
+      return (False, {},{})
     if roles.get(vline[0]):
-      return (False, vline[0])
+      return (False, vline[0],{})
     else:
       roles[vline[0]] = vline[1]
     if reverse_roles.get(vline[1]):
@@ -23,7 +31,6 @@ def getRoles(name):
     else:
       reverse_roles[vline[1]]=[vline[0]]
   return (True, roles, reverse_roles)
-
 
 def findHead(roles):
   for ascendant in roles:
@@ -44,7 +51,7 @@ def printTree(key, roles):
 
 def main():
   while True:
-    (valid, roles) = getRoles("roleHierarchy.txt")
+    (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
     if valid:
       # print(r)
       head = findHead(roles)
