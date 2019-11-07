@@ -43,6 +43,7 @@ def main():
             print(line)
             print('root is')
             print(root.role)
+            print()
             print_array(needToCheck)
             if count != 0:
                 if root.role == line[1]:                    
@@ -57,6 +58,7 @@ def main():
                     print(line[0])
                     print(root.role == line[1])
                     (node,inTree) = traverse_down(root,line[1])
+                    print(inTree)
                     if inTree:
                         build_tree(node,Node(line[0]))
                         print('before need to check')
