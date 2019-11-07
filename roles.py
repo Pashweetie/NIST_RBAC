@@ -1,4 +1,4 @@
-
+import sys
 def removeEmpty(r):
   while("" in r):
     r.remove("")
@@ -20,20 +20,34 @@ def getRoles(name):
   return (True, roles)
 
 
-def printTree(roles):
+def findHead(roles):
   for role in roles:
     if roles.get(roles[role]):
-      print(f"{roles.get(role)} -> {role} ")
+      # print(f"{roles.get(role)} -> {role} ")
+      pass
     else:
-      print(f"HEAD: {roles.get(role)} -> {role} ")
+      # print(f"HEAD: {roles.get(role)} -> {role} ")
+      helpPrintTree(roles.get(role), roles)
+      return
 
+def helpPrintTree(key, roles):
+  plist = []
+  for role in roles:
+    if roles.get(role) == key:
+      plist.append(role)
+  sys.stdout.write(f"{key} -> ")
+  for item in plist:
+    sys.stdout.write(f"{item}, ")
+  print()
+  for item in plist:
+    helpPrintTree(item, roles)
 
 def main():
   while True:
     (valid, r) = getRoles("roleHierarchy.txt")
     if valid:
-      print(r)
-      printTree(r)
+      # print(r)
+      findHead(r)
       break
     input(
       f"Invalid tree, duplicate decendant: {r}, press ENTER to read it again")

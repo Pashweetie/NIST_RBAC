@@ -62,7 +62,7 @@ def main():
                         print_array(needToCheck)
             else:                    
                 root = Node(line[1])
-                root.ascendant.append(Node(line[0],root))
+                root.ascendant.append(Node(role=line[0],descendant=root))
                 needToCheck.remove(line)
                 count =1
                 print_tree(root)
