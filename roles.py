@@ -1,24 +1,43 @@
 
-class Node:
-  def __init__(self, role = None, descendant=[], ascendants=[]):
-    self.role = role
-    self.descendants = descendant
-    self.ascendant = ascendants
+def removeEmpty(r):
+  while("" in r):
+    r.remove("")
+  return r
+
 
 def getRoles(name):
   f = open(name)
   lines = f.readlines()
+  roles = dict()
   for line in lines:
-    vline = 
+    vline = removeEmpty(line.strip("\n").split(" "))
+    if len(vline) > 2:
+      return (False, {})
+    if roles.get(vline[0]):
+      return (False, vline[0])
+    else:
+      roles[vline[0]] = vline[1]
+  return (True, roles)
+
+
+def printTree(roles):
+  for role in roles:
+    if roles.get(roles[role]):
+      print(f"{roles.get(role)} -> {role} ")
+    else:
+      print(f"HEAD: {roles.get(role)} -> {role} ")
+
 
 def main():
   while True:
-    r = getRoles("roleHierarchy.txt")
-    (dupe, found) = checkDupes(r)
-    if not found:
-      roleObject(["R1", "R2", "R3"],r)
+    (valid, r) = getRoles("roleHierarchy.txt")
+    if valid:
+      print(r)
+      printTree(r)
       break
-    input(f"Duplicate object is found {dupe}, press ENTER to read it again")
+    input(
+      f"Invalid tree, duplicate decendant: {r}, press ENTER to read it again")
+
 
 if __name__ == "__main__":
   main()
