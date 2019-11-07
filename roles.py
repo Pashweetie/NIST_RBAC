@@ -61,16 +61,27 @@ def main():
       # print(r)
       head = findHead(roles)
       printTree(head, roles)
-      resources(roles)
+      resources(roles, reverse_roles)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
 
+def matrixControls(roles, matrix):
+  for descendant in roles:
+    if "control" not in matrix[descendant][descendant]:
+      matrix[descendant][descendant].append("control")
+    for ascendant in roles[descendant]:
+      if "control" not in matrix[ascendant][ascendant]:
+        matrix[ascendant][ascendant].append("control")
+      matrix[descendant][ascendant].append("own")
+  return matrix
 
-def buildMatrix(roles, res):
+def buildEmptyMatrix(roles, res):
   matrix = dict()
   for role in roles:
     inner = dict()
+    for r in roles:
+      inner[r] = []
     for r in res:
       inner[r] = []
     matrix[role] = inner
@@ -91,6 +102,13 @@ def roleMatrix(roles, res):
         sys.stdout.write(f"\n{role}:\n   ")
     print("-----"*5)
 
+def printMatrix(cmat):
+  for role in cmat:
+    print(f"\nRole {role}:")
+    for object in cmat[role]:
+      sys.stdout.write(f"{object} permissions: ")
+      print(cmat[role][object])
+
 def checkDupes(r):
   c = []
   for resource in r:
@@ -106,7 +124,7 @@ def getResources(name):
   f.close()
   return line.split(" ")
 
-def resources(rroles):
+def resources(rroles, reverse_roles):
   roles = []
   for i in rroles:
     if i not in roles:
@@ -121,7 +139,8 @@ def resources(rroles):
     (dupe, found) = checkDupes(r)
     if not found:
       roleMatrix(roles,r)
-      print(buildMatrix(roles,r))
+      cmat = matrixControls(reverse_roles, buildEmptyMatrix(roles,r))
+      printMatrix(cmat)
       break
     input(f"Duplicate object is found {dupe}, press ENTER to read it again")
 
