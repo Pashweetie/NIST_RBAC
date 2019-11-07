@@ -9,6 +9,7 @@ def getRoles(name):
   f = open(name)
   lines = f.readlines()
   roles = dict()
+  reverse_roles = dict()
   for line in lines:
     vline = removeEmpty(line.strip("\n").split(" "))
     if len(vline) > 2:
@@ -17,14 +18,17 @@ def getRoles(name):
       return (False, vline[0])
     else:
       roles[vline[0]] = vline[1]
-  return (True, roles)
+    if reverse_roles.get(vline[1]):
+      reverse_roles[vline[1]].append(vline[0])
+    else:
+      reverse_roles[vline[1]]=[vline[0]]
+  return (True, roles, reverse_roles)
 
 
 def findHead(roles):
   for role in roles:
     if not roles.get(roles[role]):
       return roles.get(role)
-
 def printTree(key, roles):
   plist = []
   for role in roles:
