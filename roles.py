@@ -8,12 +8,15 @@ def getRules():
   f = open('permissionsToRoles.txt')
   rules = dict()
 
-def inherit(matrix, keys, ascendant):
+def inherit(matrix, keys, ascendant,permission,resource):
   descendant = keys[ascendant]
-  
+  if matrix[ascendant][resource] == None:
+    matrix[ascendant][resource] = [permission]
+  else:
+    matrix[ascendant][resource].append(permission)
   if descendant == None:
     return
-  inherit(keys[ascendant])
+  inherit(matrix,keys, descendant,permission,resource)
 
 def getRoles(name):
   f = open(name)
