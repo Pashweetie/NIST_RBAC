@@ -7,12 +7,14 @@ def removeEmpty(r):
 def getRules():
   f = open('permissionsToRoles.txt')
   rules = dict()
+
 def inherit(matrix, keys, ascendant):
   descendant = keys[ascendant]
   
   if descendant == None:
     return
   inherit(keys[ascendant])
+
 def getRoles(name):
   f = open(name)
   lines = f.readlines()
@@ -56,9 +58,61 @@ def main():
       # print(r)
       head = findHead(roles)
       printTree(head, roles)
+      resources(roles)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
+
+
+
+def roleMatrix(roles, res):
+  n = len(res)
+  m = len(roles)
+  print("-----"*6)
+  for role in roles:
+    sys.stdout.write("   ")
+    for i in range(n+m):
+      if i >= m:
+        sys.stdout.write(f"   {res[i-m]}")
+      else:
+        sys.stdout.write(f"   {roles[i]}")
+      if (i+1) % 5 == 0 or i+1 == n+m:
+        sys.stdout.write(f"\n{role}:\n   ")
+    print("-----"*5)
+
+def checkDupes(r):
+  c = []
+  for resource in r:
+    if resource not in c:
+      c.append(resource)
+    else:
+      return (resource, True)
+  return ("", False)
+
+def getResources(name):
+  f = open(name)
+  line = f.readline()
+  f.close()
+  return line.split(" ")
+
+def resources(rroles):
+  roles = []
+  for i in rroles:
+    if i not in roles:
+      roles.append(i)
+    if rroles.get(i) not in roles:
+      roles.append(rroles.get(i))
+      
+  print(roles)
+  while True:
+    r = getResources("resourceObjects.txt")
+    r = removeEmpty(r)
+    (dupe, found) = checkDupes(r)
+    if not found:
+      roleMatrix(roles,r)
+      break
+    input(f"Duplicate object is found {dupe}, press ENTER to read it again")
+
 
 
 if __name__ == "__main__":
