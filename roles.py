@@ -13,7 +13,12 @@ def inherit(matrix, keys, ascendant,permission,resource):
   if matrix[ascendant][resource] == None:
     matrix[ascendant][resource] = [permission]
   else:
-    matrix[ascendant][resource].append(permission)
+    role_exist = False
+    for i in matrix[ascendant][resource]:
+      if i == permission:
+        role_exist = True
+    if not role_exist:
+      matrix[ascendant][resource].append(permission)
   if descendant == None:
     return
   inherit(matrix,keys, descendant,permission,resource)
