@@ -10,6 +10,7 @@ def getRules():
 
 def inherit(matrix, keys, ascendant,permission,resource):
   descendant = keys.get(ascendant)
+  print(descendant)
   if matrix[ascendant][resource] == None:
     matrix[ascendant][resource] = [permission]
   else:
@@ -20,9 +21,8 @@ def inherit(matrix, keys, ascendant,permission,resource):
     if not role_exist:
       matrix[ascendant][resource].append(permission)
   if descendant == None:
-    printMatrix(matrix)
     return matrix
-  inherit(matrix,keys, descendant,permission,resource)
+  return inherit(matrix,keys, descendant,permission,resource)
 
 def getRoles(name):
   f = open(name)
@@ -118,11 +118,13 @@ def matrixControls(roles, matrix):
 
 # def matrixOwn(roles, matrix, val):
 def addPermissions(matrix, keys,permissions):
+  new_matrix = dict()
   for i in permissions:
     ascendant = i[0]
     permission = i[1]
     resource = i[2]
-    inherit(matrix,keys,ascendant,permission,resource)
+    new_matrix = inherit(matrix,keys,ascendant,permission,resource)
+  return new_matrix
 def readPermissions():
   try:    
     f = open('permissionsToRoles.txt')
