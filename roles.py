@@ -171,9 +171,9 @@ def printMatrix(mat):
     n = len(mat[role])
     i = 0
     sys.stdout.write("   ")
-    for object in mat[role]:
-      stack.append(object)
-      sys.stdout.write(f"{emptys*(9-len(object))}{object}")
+    for ob in mat[role]:
+      stack.append(ob)
+      sys.stdout.write(f"{emptys*(9-len(ob))}{ob}")
       if (i+1) % 5 == 0 or i+1 == n:
         sys.stdout.write(f"\n{role}:")
         for p in stack:
