@@ -9,7 +9,7 @@ def getRules():
   rules = dict()
 
 def inherit(matrix, keys, ascendant,permission,resource):
-  descendant = keys[ascendant]
+  descendant = keys.get(ascendant)
   if matrix[ascendant][resource] == None:
     matrix[ascendant][resource] = [permission]
   else:
@@ -20,7 +20,8 @@ def inherit(matrix, keys, ascendant,permission,resource):
     if not role_exist:
       matrix[ascendant][resource].append(permission)
   if descendant == None:
-    return
+    printMatrix(matrix)
+    return matrix
   inherit(matrix,keys, descendant,permission,resource)
 
 def getRoles(name):
@@ -76,6 +77,8 @@ def orderRoles(roles, head):
 def main():
   while True:
     (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
+    (isValid,permissions) = readPermissions()
+    valid = valid and isValid
     if valid:
       # print(r)
       head = findHead(roles)
@@ -83,7 +86,9 @@ def main():
       print(reverse_roles)
       reverse_roles = orderRoles(reverse_roles, head)
       print(reverse_roles)
-      resources(roles, reverse_roles)
+      matrix = resources(roles, reverse_roles)
+      matrix = addPermissions(matrix,roles,permissions)
+      printMatrix(matrix)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
@@ -99,7 +104,24 @@ def matrixControls(roles, matrix):
   return matrix
 
 # def matrixOwn(roles, matrix, val):
+def addPermissions(matrix, keys,permissions):
+  for i in permissions:
+    ascendant = i[0]
+    permission = i[1]
+    resource = i[2]
+    inherit(matrix,keys,ascendant,permission,resource)
+def readPermissions():
+  try:    
+    f = open('permissionsToRoles.txt')
+    line = f.readlines()
+    f.close()
+    return_array = []
+    for i in line:
+      return_array.append(i.split())
 
+    return (True,return_array)
+  except:
+    return (False, None)
 
 def buildEmptyMatrix(roles, res):
   matrix = dict()
@@ -181,8 +203,8 @@ def resources(rroles, reverse_roles):
       mat = buildEmptyMatrix(roles, r)
       # printMatrix(mat)
       cmat = matrixControls(reverse_roles, mat)
-      printMatrix(cmat)
-      break
+      # printMatrix(cmat)
+      return cmat
     input(f"Duplicate object is found {dupe}, press ENTER to read it again")
 
 
