@@ -55,9 +55,20 @@ def printTree(key, roles):
     for item in plist:
       printTree(item, roles)
 
+def pTree(roles, head):
+  ordered = dict()
+  l = [head]
+  while len(l) > 0:
+    if roles.get(l[0]):
+      sys.stdout.write(f"{l[0]} -> ")
+      for a in roles[l[0]]:
+        sys.stdout.write(f"{a}, ")
+        l.append(a)
+      print()
+    l.remove(l[0])
+
 def orderRoles(roles, head):
   ordered = dict()
-  # ordered[head] = roles[head]
   l = [head]
   while len(l) > 0:
     if roles.get(l[0]):
@@ -65,6 +76,7 @@ def orderRoles(roles, head):
       for a in roles[l[0]]:
         l.append(a)
     l.remove(l[0])
+    print()
   return ordered
 
 
@@ -74,11 +86,13 @@ def main():
     if valid:
       # print(r)
       head = findHead(roles)
-      printTree(head, roles)
-      print(reverse_roles)
+      
+      
       reverse_roles = orderRoles(reverse_roles, head)
+      pTree(reverse_roles, head)
       print(reverse_roles)
-      resources(roles, reverse_roles)
+      # print(reverse_roles)
+      # resources(roles, reverse_roles)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
@@ -163,11 +177,14 @@ def getResources(name):
 
 def resources(rroles, reverse_roles):
   roles = []
-  for i in rroles:
+  for i in reverse_roles:
     if i not in roles:
       roles.append(i)
-    if rroles.get(i) not in roles:
-      roles.append(rroles.get(i))
+    if reverse_roles.get(i) not in roles:
+      for a in reverse_roles[i]:
+        if a not in roles:
+          roles.append(a)
+  print(roles)
   while True:
     r = getResources("resourceObjects.txt")
     r = removeEmpty(r)
@@ -176,7 +193,7 @@ def resources(rroles, reverse_roles):
       mat = buildEmptyMatrix(roles, r)
       # printMatrix(mat)
       cmat = matrixControls(reverse_roles, mat)
-      printMatrix(cmat)
+      # printMatrix(cmat)
       break
     input(f"Duplicate object is found {dupe}, press ENTER to read it again")
 
