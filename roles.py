@@ -96,6 +96,8 @@ def main():
       reverse_roles = orderRoles(reverse_roles, head)
       pTree(reverse_roles, head)
       matrix = resources(roles, reverse_roles)
+      print(f"Matrix is: {matrix}")
+      printMatrix(matrix)
       matrix = addPermissions(matrix,roles,permissions)
       print("\nFilled Object-Control Matrix:")
       printMatrix(matrix)
@@ -111,10 +113,22 @@ def matrixControls(roles, matrix):
     for ascendant in roles[descendant]:
       if "control" not in matrix[ascendant][ascendant]:
         matrix[ascendant][ascendant].append("control")
-      # matrix[descendant][ascendant].append("own")
   return matrix
 
-# def matrixOwn(roles, matrix, val):
+def matrixOwn(roles, matrix):
+  for role in roles:
+    stack = []
+    for a in roles[role]:
+      stack.append(a)    
+    while len(stack) > 0:
+      if roles.get(stack[0]):
+        for a in roles[stack[0]]:
+          stack.append(a)
+      if "owns" not in matrix[role][stack[0]]:
+        matrix[role][stack[0]].append("owns")
+      stack.remove(stack[0])
+  return matrix
+
 def addPermissions(matrix, keys,permissions):
   new_matrix = dict()
   for i in permissions:
@@ -123,6 +137,7 @@ def addPermissions(matrix, keys,permissions):
     resource = i[2]
     new_matrix = inherit(matrix,keys,ascendant,permission,resource)
   return new_matrix
+
 def readPermissions():
   try:    
     f = open('permissionsToRoles.txt')
@@ -189,7 +204,7 @@ def printMatrix(mat):
     i = 0
     sys.stdout.write("   ")
     for ob in mat[role]:
-      stack.append(mat[role][ob])
+      stack.append(mat[role][ob][:])
       sys.stdout.write(f"{emptys*(9-len(ob))}{ob}")
       if (i+1) % 5 == 0 or i+1 == n:
         sys.stdout.write(f"\n{role}:")
@@ -240,8 +255,8 @@ def resources(rroles, reverse_roles):
     if not found:
       mat = buildEmptyMatrix(roles, r)
       print("Empty Object-Control Matrix:")
-      printMatrix(mat)
-      cmat = matrixControls(reverse_roles, mat)
+      printMatrix(mat) 
+      cmat = matrixOwn(reverse_roles, matrixControls(reverse_roles, mat))
       print()
       return cmat
     input(f"Duplicate object is found {dupe}, press ENTER to read it again")
