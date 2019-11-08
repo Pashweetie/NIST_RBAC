@@ -10,7 +10,6 @@ def getRules():
 
 def inherit(matrix, keys, ascendant,permission,resource):
   descendant = keys.get(ascendant)
-  print(descendant)
   if matrix[ascendant][resource] == None:
     matrix[ascendant][resource] = [permission]
   else:
@@ -99,9 +98,9 @@ def main():
       reverse_roles = orderRoles(reverse_roles, head)
       pTree(reverse_roles, head)
       print(reverse_roles)
-      # matrix = resources(roles, reverse_roles)
-      # matrix = addPermissions(matrix,roles,permissions)
-      # printMatrix(matrix)
+      matrix = resources(roles, reverse_roles)
+      matrix = addPermissions(matrix,roles,permissions)
+      printMatrix(matrix)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
@@ -174,15 +173,21 @@ def printMatrix(mat):
     i = 0
     sys.stdout.write("   ")
     for ob in mat[role]:
-      stack.append(ob)
+      stack.append(mat[role][ob])
       sys.stdout.write(f"{emptys*(9-len(ob))}{ob}")
       if (i+1) % 5 == 0 or i+1 == n:
         sys.stdout.write(f"\n{role}:")
-        for p in stack:
-          if mat[role][p] == []:
-            sys.stdout.write(emptys*9)
-          else:
-            sys.stdout.write(f"{emptys*(9-len(mat[role][p][0]))}{mat[role][p][0]}")
+        s = len(stack)
+        while s is not 0:
+          s = len(stack)
+          for p in stack:
+            if p == []:
+              sys.stdout.write(emptys*9)
+              s = s - 1
+            else:
+              sys.stdout.write(f"{emptys*(9-len(p[0]))}{p[0][0:9]}")
+              p.remove(p[0])
+          sys.stdout.write("\n   ")
         stack = []
         sys.stdout.write("\n\n   ")
       i = i+1
