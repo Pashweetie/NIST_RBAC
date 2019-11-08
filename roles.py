@@ -21,7 +21,6 @@ def inherit(matrix, keys, ascendant,permission,resource):
     if not role_exist:
       matrix[ascendant][resource].append(permission)
   if descendant == None:
-    printMatrix(matrix)
     return matrix
   return inherit(matrix,keys, descendant,permission,resource)
 
