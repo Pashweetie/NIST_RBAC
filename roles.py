@@ -163,7 +163,21 @@ def buildEmptyMatrix(roles, res):
 #       if (i+1) % 5 == 0 or i+1 == n+m:
 #         sys.stdout.write(f"\n{role}:\n   ")
 #     print("-----"*5)
-
+def printMatrix2(mat):
+  for role in mat:
+    print(" "*12)
+    for role2 in mat[role]:
+      print(role2+" "*9,end='')
+    print(str(role)+":", end ='')    
+    none_found = False
+    counter = 0
+    while not none_found:
+      for role3 in mat[role]:
+            if mat[role][role3][counter] == []:
+              print(' '*6)
+            else:
+              lengthOf = 9-len(permission)
+              print(' '*lengthOf+str(permission))
 def printMatrix(mat):
   print("--------"*6)
   emptys = " "
