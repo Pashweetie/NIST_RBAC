@@ -63,6 +63,7 @@ def printTree(key, roles):
 def pTree(roles, head):
   ordered = dict()
   l = [head]
+  print("\nThe Tree:")
   while len(l) > 0:
     if roles.get(l[0]):
       sys.stdout.write(f"{l[0]} -> ")
@@ -71,6 +72,7 @@ def pTree(roles, head):
         l.append(a)
       print()
     l.remove(l[0])
+  print()
 
 def orderRoles(roles, head):
   ordered = dict()
@@ -81,7 +83,6 @@ def orderRoles(roles, head):
       for a in roles[l[0]]:
         l.append(a)
     l.remove(l[0])
-    print()
   return ordered
 
 
@@ -91,16 +92,14 @@ def main():
     (isValid,permissions) = readPermissions()
     valid = valid and isValid
     if valid:
-      # print(r)
       head = findHead(roles)
-      
-      
       reverse_roles = orderRoles(reverse_roles, head)
       pTree(reverse_roles, head)
-      print(reverse_roles)
       matrix = resources(roles, reverse_roles)
       matrix = addPermissions(matrix,roles,permissions)
+      print("\nFilled Object-Control Matrix:")
       printMatrix(matrix)
+      print()
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
@@ -234,16 +233,16 @@ def resources(rroles, reverse_roles):
       for a in reverse_roles[i]:
         if a not in roles:
           roles.append(a)
-  print(roles)
   while True:
     r = getResources("resourceObjects.txt")
     r = removeEmpty(r)
     (dupe, found) = checkDupes(r)
     if not found:
       mat = buildEmptyMatrix(roles, r)
-      # printMatrix(mat)
+      print("Empty Object-Control Matrix:")
+      printMatrix(mat)
       cmat = matrixControls(reverse_roles, mat)
-      # printMatrix(cmat)
+      print()
       return cmat
     input(f"Duplicate object is found {dupe}, press ENTER to read it again")
 
