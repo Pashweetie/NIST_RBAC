@@ -55,6 +55,19 @@ def printTree(key, roles):
     for item in plist:
       printTree(item, roles)
 
+def orderRoles(roles, head):
+  ordered = dict()
+  # ordered[head] = roles[head]
+  l = [head]
+  while len(l) > 0:
+    if roles.get(l[0]):
+      ordered[l[0]] = roles[l[0]]
+      for a in roles[l[0]]:
+        l.append(a)
+    l.remove(l[0])
+  return ordered
+
+
 def main():
   while True:
     (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
@@ -62,6 +75,9 @@ def main():
       # print(r)
       head = findHead(roles)
       printTree(head, roles)
+      print(reverse_roles)
+      reverse_roles = orderRoles(reverse_roles, head)
+      print(reverse_roles)
       resources(roles, reverse_roles)
       break
     input(
@@ -146,7 +162,6 @@ def getResources(name):
   return line.split(" ")
 
 def resources(rroles, reverse_roles):
-  print(reverse_roles)
   roles = []
   for i in rroles:
     if i not in roles:
@@ -159,6 +174,7 @@ def resources(rroles, reverse_roles):
     (dupe, found) = checkDupes(r)
     if not found:
       mat = buildEmptyMatrix(roles, r)
+      # printMatrix(mat)
       cmat = matrixControls(reverse_roles, mat)
       printMatrix(cmat)
       break
