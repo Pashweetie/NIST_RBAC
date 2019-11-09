@@ -97,7 +97,7 @@ def main():
   while True:
     (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
     (isValid,permissions) = readPermissions()
-    loop_until_constraints()
+    constraints = loop_until_constraints()
     valid = valid and isValid
     if valid:
       head = findHead(roles)
@@ -110,6 +110,7 @@ def main():
       print("\nFilled Object-Control Matrix:")
       printMatrix(matrix)
       print()
+      users = readUsers(constraints)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
@@ -210,28 +211,35 @@ def checkUsers(constraints):
   users = dict()
   lines = f.readlines()
   f.close()
-  i = 0
+  j = 0
   for line in lines:
-    c = constraints.copy()
+    c = []
+    for i in range(len(constraints)):
+      c.append(dict())
+      c[i]["n"] = constraints[i]["n"]
+      c[i]["roles"] = []
+      for r in range(len(constraints[i]["roles"])):
+        c[i]["roles"].append(constraints[i]["roles"][r])
+
     line = line.split()
     if users.get(line[0]):
-      return (False, i+1, None, f'duplicate user: {users.get[0]}')
+      return (False, j+1, None, f'duplicate user: {line[0]}')
     users[line[0]] = []
 
-    cnum = 1
     for role in line[1:]:
+      cnum = 1
       for n in c:
         if role in n["roles"]:
           n["n"] = int(n["n"]) - 1
           if n["n"] == 0:
-            return (False, i+1, None, f'constraint #{cnum}')
-          users[line[0]].append(role)
+            return (False, j+1, None, f'constraint #{cnum}')
         cnum += 1
-    i += 1
-  return users
+      users[line[0]].append(role)
+    j += 1
 
-      # [{"n":3, "roles":["R2", "R4", "R5", "R6"]}, {"n":2, "roles":["R2", "R4", "R5", "R6"]}]
-    
+  return (True, None, users, None)
+
+
 
 def readUsers(constraints):
   while True:
