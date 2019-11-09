@@ -97,8 +97,8 @@ def main():
   while True:
     (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
     (isValid,permissions) = readPermissions()
-    (isMoreValid, constraints) = read_constraints()
-    valid = valid and isValid and isMoreValid
+    loop_until_constraints()
+    valid = valid and isValid
     if valid:
       head = findHead(roles)
       reverse_roles = orderRoles(reverse_roles, head)
@@ -110,10 +110,17 @@ def main():
       print("\nFilled Object-Control Matrix:")
       printMatrix(matrix)
       print()
-      print_constraints(constraints)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
+  
+def loop_until_constraints():
+  while True:
+    (line_no,isMoreValid, constraints) = read_constraints()
+    if isMoreValid:
+      print_constraints(constraints)
+      return constraints
+    input(f'Invalid constraints at line no#: {line_no+1}, press ENTER to read it again')
 
 def matrixControls(roles, matrix):
   for descendant in roles:
@@ -186,12 +193,12 @@ def read_constraints():
       line2 = i.split()
       constraints.append(dict())
       if(int(line2[0])<2):
-        return (False, None)
+        return (counter,False, None)
       constraints[counter]['n']=line2[0]
       line2.remove(line2[0])
       constraints[counter]['roles'] = line2
-      counter =+ 1
-    return (True, constraints)
+      counter = counter + 1
+    return (None,True, constraints)
   except:
     input('Please have a valid file before attempting again. Press enter once this is updated')
 
