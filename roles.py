@@ -111,9 +111,36 @@ def main():
       printMatrix(matrix)
       print()
       users = readUsers(constraints)
+      userMatrix(reverse_roles, users)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
+
+
+# ---------------------- RANDOM ----------------------------------------------
+
+def userMatrix(reverse_roles, users):
+  roles = []
+  for i in reverse_roles:
+    if i not in roles:
+      roles.append(i)
+    if reverse_roles.get(i) not in roles:
+      for a in reverse_roles[i]:
+        if a not in roles:
+          roles.append(a)
+
+  empty = " "
+  for user in users:
+    print("   ",end="")
+    for role in roles:
+      print(f"{empty*(9-len(role))}{role[0:9]}", end="")
+    print(f"\n{user}:", end="")
+    for role in roles:
+      if role in users[user]:
+        print(f"       + ", end="")
+      else:
+        print(empty*9, end="")
+    print()
   
 def loop_until_constraints():
   while True:
