@@ -23,6 +23,10 @@ def inherit(matrix, keys, ascendant,permission,resource):
     return matrix
   return inherit(matrix,keys, descendant,permission,resource)
 
+
+
+## --------------ROLES SECTION----------------------
+
 def getRoles(name):
   f = open(name)
   lines = f.readlines()
@@ -86,6 +90,9 @@ def orderRoles(roles, head):
   return ordered
 
 
+
+# ----------------------------MAIN-------------------------------------------
+
 def main():
   while True:
     (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
@@ -131,6 +138,9 @@ def matrixOwn(roles, matrix):
       stack.remove(stack[0])
   return matrix
 
+
+## --------------PERMISSIONS SECTION----------------------
+
 def addPermissions(matrix, keys,permissions):
   new_matrix = dict()
   for i in permissions:
@@ -152,6 +162,10 @@ def readPermissions():
     return (True,return_array)
   except:
     return (False, None)
+
+
+## --------------CONSTRAINTS SECTION----------------------
+
 def print_constraints(constraints):
   counter = 1
   for i in constraints:
@@ -160,6 +174,7 @@ def print_constraints(constraints):
       print(b+', ',end = '')
     print('}')
     counter += 1
+
 def read_constraints():
   try:    
     constraints = []
@@ -180,6 +195,47 @@ def read_constraints():
   except:
     input('Please have a valid file before attempting again. Press enter once this is updated')
 
+
+## --------------USER SECTION----------------------
+
+def checkUsers(constraints):
+  f = open('userRoles.txt')
+  users = dict()
+  lines = f.readlines()
+  f.close()
+  i = 0
+  for line in lines:
+    c = constraints.copy()
+    line = line.split()
+    if users.get(line[0]):
+      return (False, i+1, None, f'duplicate user: {users.get[0]}')
+    users[line[0]] = []
+
+    cnum = 1
+    for role in line[1:]:
+      for n in c:
+        if role in n["roles"]:
+          n["n"] = int(n["n"]) - 1
+          if n["n"] == 0:
+            return (False, i+1, None, f'constraint #{cnum}')
+          users[line[0]].append(role)
+        cnum += 1
+    i += 1
+  return users
+
+      # [{"n":3, "roles":["R2", "R4", "R5", "R6"]}, {"n":2, "roles":["R2", "R4", "R5", "R6"]}]
+    
+
+def readUsers(constraints):
+  while True:
+    (valid, line, users, failure) = checkUsers(constraints)
+    if valid:
+      return users
+    input(f'Invalid line is found in usersRoles.txt: line {line} due to {failure}, press ENTER to read it again')
+
+
+
+## --------------MATRIX SECTION----------------------
 def buildEmptyMatrix(roles, res):
   matrix = dict()
   for role in roles:
