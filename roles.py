@@ -112,7 +112,7 @@ def loop_until_constraints():
     (line_no,isMoreValid, constraints) = read_constraints()
     if isMoreValid:
       print_constraints(constraints)
-      break
+      return constraints
     input(f'Invalid constraints at line no#: {line_no+1}, press ENTER to read it again')
 
 def matrixControls(roles, matrix):
