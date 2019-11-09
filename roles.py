@@ -415,22 +415,27 @@ def query_logic(user, the_object, permission, user_matrix, permission_matrix):
 def main():
   while True:
     (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
-    (isValid,permissions) = readPermissions()
-    constraints = loop_until_constraints()
-    valid = valid and isValid
     if valid:
       head = findHead(roles)
       reverse_roles = orderRoles(reverse_roles, head)
       pTree(reverse_roles, head)
       matrix = resources(roles, reverse_roles)
-      print(f"Matrix is: {matrix}")
-      printMatrix(matrix)
+      permissions = ''
+      while True:
+        (isValid,permissions) = readPermissions()
+        if isValid:
+          break
+        input(f"permissionsToRoles.txt not found; create the file and press ENTER to read it again")
+
       permissions_matrix = addPermissions(matrix,roles,permissions)
-      print("\nFilled Object-Control Matrix:")
+      print("\nFilled Role-Object Matrix:")
       printMatrix(matrix)
-      print()
+      print("\nConstraints:")
+      constraints = loop_until_constraints()
       users = readUsers(constraints)
+      print("\nUser-Role Matrix:")
       userMatrix(reverse_roles, users)
+      print("\n")
       query_valid(users,permissions_matrix)
       break
     input(
