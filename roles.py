@@ -91,30 +91,7 @@ def orderRoles(roles, head):
 
 
 
-# ----------------------------MAIN-------------------------------------------
 
-def main():
-  while True:
-    (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
-    (isValid,permissions) = readPermissions()
-    constraints = loop_until_constraints()
-    valid = valid and isValid
-    if valid:
-      head = findHead(roles)
-      reverse_roles = orderRoles(reverse_roles, head)
-      pTree(reverse_roles, head)
-      matrix = resources(roles, reverse_roles)
-      print(f"Matrix is: {matrix}")
-      printMatrix(matrix)
-      matrix = addPermissions(matrix,roles,permissions)
-      print("\nFilled Object-Control Matrix:")
-      printMatrix(matrix)
-      print()
-      users = readUsers(constraints)
-      userMatrix(reverse_roles, users)
-      break
-    input(
-      f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
 
 
 # ---------------------- RANDOM ----------------------------------------------
@@ -387,8 +364,77 @@ def resources(rroles, reverse_roles):
       print()
       return cmat
     input(f"Duplicate object is found {dupe}, press ENTER to read it again")
+# -----------------------------QUERY-----------------------------------------
+
+def query_valid(user_matrix,permission_matrix):  
+  while True:
+    user = input('Please enter the user in your query:')
+    the_object = input('Please enter the object in your query (hit enter if it’s for any):')
+    the_permission = input('Please enter the access right in your query (hit enter if it’s for any):')  
+    if user in user_matrix:
+      if query_logic(user,the_object,the_permission,user_matrix,permission_matrix):      
+        continue_val = input('Would you like to continue for the next query?')
+        if continue_val != 'yes':
+          break
+      else:
+        print('invalid object, try again')
+    else:
+      print('invalid user, try again')
+
+def query_logic(user, the_object, permission, user_matrix, permission_matrix):
+  if the_object == '' and permission == '':
+    for role in user_matrix[user]:
+      for object1 in permission_matrix[role]:
+        if permission_matrix[role][object1] != []:
+          print(object1,end= ' ')
+          for permission2 in permission_matrix[role][object1]:
+            print(f'{permission2}, ',end ='')
+          print()
+    return True
+  allowed = False
+  for role in user_matrix[user]:
+    if the_object not in permission_matrix[role]:
+      return False  
+    if permission == '':
+      print(the_object,end=' ')
+      for x in permission_matrix[role][the_object]:
+        print(f'{x}, ', end='')
+      print()
+      return True
+    if permission in permission_matrix[role][the_object]:
+      allowed = True
+  if allowed:
+    print('authorized')
+  else:
+    print('rejected')
+  return True
 
 
+# ----------------------------MAIN-------------------------------------------
+
+def main():
+  while True:
+    (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
+    (isValid,permissions) = readPermissions()
+    constraints = loop_until_constraints()
+    valid = valid and isValid
+    if valid:
+      head = findHead(roles)
+      reverse_roles = orderRoles(reverse_roles, head)
+      pTree(reverse_roles, head)
+      matrix = resources(roles, reverse_roles)
+      print(f"Matrix is: {matrix}")
+      printMatrix(matrix)
+      permissions_matrix = addPermissions(matrix,roles,permissions)
+      print("\nFilled Object-Control Matrix:")
+      printMatrix(matrix)
+      print()
+      users = readUsers(constraints)
+      userMatrix(reverse_roles, users)
+      query_valid(users,permissions_matrix)
+      break
+    input(
+      f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
 
 if __name__ == "__main__":
   main()
