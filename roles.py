@@ -90,7 +90,8 @@ def main():
   while True:
     (valid, roles,reverse_roles) = getRoles("roleHierarchy.txt")
     (isValid,permissions) = readPermissions()
-    valid = valid and isValid
+    (isMoreValid, constraints) = read_constraints()
+    valid = valid and isValid and isMoreValid
     if valid:
       head = findHead(roles)
       reverse_roles = orderRoles(reverse_roles, head)
@@ -102,6 +103,7 @@ def main():
       print("\nFilled Object-Control Matrix:")
       printMatrix(matrix)
       print()
+      print_constraints(constraints)
       break
     input(
       f"Invalid tree, duplicate decendant: {roles}, press ENTER to read it again")
@@ -150,6 +152,33 @@ def readPermissions():
     return (True,return_array)
   except:
     return (False, None)
+def print_constraints(constraints):
+  counter = 1
+  for i in constraints:
+    print('Constraint '+str(counter)+", n = "+i['n']+', set of roles = {',end='')
+    for b in i['roles']:
+      print(b+', ',end = '')
+    print('}')
+    counter += 1
+def read_constraints():
+  try:    
+    constraints = []
+    f = open('roleSetsSSD.txt')
+    line = f.readlines()
+    f.close()
+    counter = 0
+    for i in line:
+      line2 = i.split()
+      constraints.append(dict())
+      if(int(line2[0])<2):
+        return (False, None)
+      constraints[counter]['n']=line2[0]
+      line2.remove(line2[0])
+      constraints[counter]['roles'] = line2
+      counter =+ 1
+    return (True, constraints)
+  except:
+    input('Please have a valid file before attempting again. Press enter once this is updated')
 
 def buildEmptyMatrix(roles, res):
   matrix = dict()
