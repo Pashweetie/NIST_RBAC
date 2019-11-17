@@ -10,7 +10,7 @@ def getRules():
 
 def inherit(matrix, keys, ascendant,permission,resource):
   descendant = keys.get(ascendant)
-  if matrix[ascendant][resource] == None:
+  if matrix.get(ascendant).get(resource) == None:
     matrix[ascendant][resource] = [permission]
   else:
     role_exist = False
@@ -211,7 +211,7 @@ def read_constraints():
 ## --------------USER SECTION----------------------
 
 def checkUsers(constraints):
-  f = open('userRoles.txt')
+  f = open('usersRoles.txt')
   users = dict()
   lines = f.readlines()
   f.close()
@@ -341,7 +341,7 @@ def getResources(name):
   f = open(name)
   line = f.readline()
   f.close()
-  return line.split(" ")
+  return line.split()
 
 def resources(rroles, reverse_roles):
   roles = []
